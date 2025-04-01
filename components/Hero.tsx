@@ -13,12 +13,8 @@ const Hero = () => {
           `https://api.adzuna.com/v1/api/jobs/gb/categories?app_id=${process.env.NEXT_PUBLIC_ADZUNA_APP_ID}&app_key=${process.env.NEXT_PUBLIC_ADZUNA_APP_KEY}`
         );
         const data = await response.json();
-        
         console.log("Fetched categories:", data);
-
-
         if (data.results) {
-          // Extract category names, remove "Jobs" from labels, and get top 10
           const topCategories = data.results
             .map((cat: { label: string }) => cat.label.replace(" Jobs", ""))
             .slice(0, 10);
@@ -40,21 +36,21 @@ const Hero = () => {
 
   return (
     <section
-      className="relative bg-cover bg-center h-[500px] flex items-center "
+      className="relative bg-cover bg-center h-[500px] sm:h-[400px] md:h-[500px] lg:h-[600px] flex items-center"
       style={{ backgroundImage: "url('/images/hero_img.jpg')" }}
     >
       <div className="container mx-auto px-4">
-        {/* Hero Content */}
         <div className="max-w-xl text-black">
-          <h1 className="text-4xl font-bold">Find Your Dream Job</h1>
-          <p className="mt-2 text-lg">Browse thousands of job listings from top companies.</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">Find Your Dream Job</h1>
+          <p className="mt-2 text-base sm:text-lg">
+            Browse thousands of job listings from top companies.
+          </p>
 
-          {/* Search Bar */}
           <form onSubmit={handleSearch} className="mt-4 flex bg-white p-2 rounded-lg shadow-md">
             <input
               type="text"
               name="search"
-              placeholder="Search jobs..."
+              placeholder="Search for job title"
               className="flex-grow p-2 text-gray-700 outline-none"
             />
             <button
@@ -65,14 +61,13 @@ const Hero = () => {
             </button>
           </form>
 
-          {/* Popular Categories */}
           <h2 className="mt-6 text-lg font-semibold">Popular Categories</h2>
-          <div className="grid grid-cols-5 gap-4 mt-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-10 gap-y-5 mt-2 ">
             {categories.map((category, index) => (
               <button
                 key={index}
                 onClick={() => router.push(`/jobs?category=${category.toLowerCase()}`)}
-                className="bg-white text-gray-800 p-2 rounded-lg shadow-md text-sm hover:bg-gray-200"
+             className="bg-white text-[#0057ff] px-4 py-2 rounded-lg shadow-md text-sm transition-colors duration-300 hover:bg-[#0057ff] hover:text-white w-full sm:w-auto min-w-[120px]"
               >
                 {category}
               </button>
