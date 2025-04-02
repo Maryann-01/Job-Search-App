@@ -24,24 +24,31 @@ const JobPage = () => {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const appId = process.env.NEXT_PUBLIC_ADZUNA_APP_ID;
-        const appKey = process.env.NEXT_PUBLIC_ADZUNA_APP_KEY;
-        const response = await fetch(
-          `https://api.adzuna.com/v1/api/jobs/${country}/get/${id}?app_id=${appId}&app_key=${appKey}`
-        );
+        console.log(`Fetching job details for ${country}/${id}`);
         
-        if (!response.ok) throw new Error('Job not found');
+        const response = await fetch(`/api/adzuna/${country}/${id}`);
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Error response:', errorData);
+          throw new Error(errorData.error || 'Job not found');
+        }
         
         const data = await response.json();
+        console.log('Job data received:', data);
+        
         setJob(data);
       } catch (err) {
+        console.error('Error loading job details:', err);
         setError('Failed to load job details');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchJob();
+    if (country && id) {
+      fetchJob();
+    }
   }, [country, id]);
 
   if (loading) return <p className="text-center p-8">Loading...</p>;

@@ -46,21 +46,6 @@ const Hero = () => {
             Browse thousands of job listings from top companies.
           </p>
 
-          <form onSubmit={handleSearch} className="mt-4 flex bg-white p-2 rounded-lg shadow-md">
-            <input
-              type="text"
-              name="search"
-              placeholder="Search for job title"
-              className="flex-grow p-2 text-gray-700 outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-            >
-              Search
-            </button>
-          </form>
-
           <h2 className="mt-6 text-lg font-semibold">Popular Categories</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-10 gap-y-5 mt-2 ">
             {categories.map((category, index) => (

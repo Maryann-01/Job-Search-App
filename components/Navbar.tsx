@@ -1,21 +1,24 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname,useRouter } from 'next/navigation';
 import { FiMenu, FiX } from 'react-icons/fi';
-
+import { useAuth } from '@/contexts/AuthContext'; 
 const Navbar = () => {
-
+    const { user, logout } = useAuth(); 
+    const router = useRouter();
     const pathname = usePathname();
-    
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-
 
     const getLinkClass = (href: string) => {
         const baseClasses = "px-2 py-1 rounded transition duration-200 text-sm sm:text-base";
         const activeClasses = "text-[#0057ff]";
         const inactiveClasses = "text-gray-500 hover:text-[#0057ff]";
         return `${baseClasses} ${pathname === href ? activeClasses : inactiveClasses}`;
+    };
+    const handleLogout = () => {
+        logout();
+        router.push('/');
     };
 
     return (
@@ -37,12 +40,21 @@ const Navbar = () => {
                 </Link>
             </div>
             <div className="hidden md:block">
-                <Link
-                    href="/login"
-                    className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
-                >
-                    Login
-                </Link>
+                {user ? (
+                    <button
+                        onClick={handleLogout}
+                        className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
+                    >
+                        Logout
+                    </button>
+                ) : (
+                    <Link
+                        href="/login"
+                        className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
+                    >
+                        Login
+                    </Link>
+                )}
             </div>
 
             <div className="md:hidden">
@@ -68,13 +80,23 @@ const Navbar = () => {
                     <Link href="/contact" onClick={() => setMobileNavOpen(false)}>
                         <span className={getLinkClass("/contact")}>Contact</span>
                     </Link>
-                    <Link
-                        href="/login"
-                        onClick={() => setMobileNavOpen(false)}
-                        className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
-                    >
-                        Login
-                    </Link>
+                    {user ? (
+                        <button
+                            onClick={handleLogout}
+                            className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <Link
+                            href="/login"
+                            onClick={() => setMobileNavOpen(false)}
+                            className="border border-[#0057ff] text-gray-500 hover:bg-[#0057ff] hover:text-white mr-4 px-4 py-2 rounded transition duration-200 text-sm sm:text-base"
+                        >
+                            Login
+                        </Link>
+                    )}
+                    
                 </div>
             )}
         </nav>

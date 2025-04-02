@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FaFilter } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Job {
   id: string;
@@ -17,6 +18,7 @@ interface Category {
 
 const FeaturedJobs = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const [jobs, setJobs] = useState<Job[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
