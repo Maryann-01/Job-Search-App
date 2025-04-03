@@ -12,14 +12,7 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-let app;
-if (typeof window !== 'undefined') {
-  if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-  } else {
-    app = getApps()[0];
-  }
-}
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
 
-export const auth = app ? getAuth(app) : null;
-export const db = app ? getFirestore(app) : null;
+
