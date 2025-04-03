@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { FiMail, FiUser, FiMessageSquare, FiAlertCircle } from 'react-icons/fi';
+import Link from 'next/link';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ const ContactPage = () => {
 
       setSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to send message. Please try again.');
     } finally {
       setSubmitting(false);
@@ -54,7 +55,7 @@ const ContactPage = () => {
         <div className="bg-white rounded-xl shadow-lg overflow-hidden p-6 sm:p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-[#0057ff] mb-2">Contact Us</h1>
-            <p className="text-gray-600">Have questions? We're here to help!</p>
+            <p className="text-gray-600">Have questions? We&apos;re here to help!</p>
           </div>
 
           {error && (
@@ -70,7 +71,7 @@ const ContactPage = () => {
                 Message sent successfully!
               </div>
               <p className="text-gray-600">
-                We'll get back to you within 24 hours.
+                We&apos;ll get back to you within 24 hours.
               </p>
             </div>
           ) : (

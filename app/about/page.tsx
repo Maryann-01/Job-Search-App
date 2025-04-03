@@ -1,5 +1,6 @@
 "use client";
 import { FaSearch, FaFilter, FaLock, FaBell } from 'react-icons/fa';
+import Link from 'next/link';
 
 const AboutPage = () => {
     return (
@@ -82,7 +83,7 @@ const AboutPage = () => {
                         </p>
                         <p className="text-gray-600 text-lg leading-relaxed mt-4">
                             We noticed many platforms made it hard to find basic information before
-                            signing up. That's why we built a transparent system where you can browse
+                            signing up. That&apos;s why we built a transparent system where you can browse
                             listings freely, but protect employer connections behind a secure login -
                             ensuring serious applicants and quality opportunities.
                         </p>
@@ -98,18 +99,18 @@ const AboutPage = () => {
                         and quality connections
                     </p>
                     <div className="flex justify-center gap-4">
-                        <a
+                        <Link
                             href="/#featured-jobs"
                             className="bg-[#0057ff] text-white px-8 py-4 rounded-lg hover:bg-blue-600 transition-colors text-lg font-semibold cursor-pointer"
                         >
                             Browse Jobs
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/login"
                             className="border-2 border-[#0057ff] text-[#0057ff] px-8 py-4 rounded-lg hover:bg-blue-50 transition-colors text-lg font-semibold cursor-pointer"
                         >
                             Sign In
-                        </a>
+                        </Link>
                     </div>
                 </section>
             </div>
