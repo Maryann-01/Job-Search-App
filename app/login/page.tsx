@@ -1,9 +1,9 @@
 "use client";
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
-export default function LoginPage() {
+function LoginContent() {
   const { login, user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -22,6 +22,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="bg-white p-8 rounded shadow-md w-96">
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <button
           onClick={login}
           className="w-full bg-[#0057ff] text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors"
@@ -30,5 +31,13 @@ export default function LoginPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
