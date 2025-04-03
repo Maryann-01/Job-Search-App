@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FaFilter } from "react-icons/fa";
+import { FaFilter, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -29,6 +29,11 @@ const FeaturedJobs = () => {
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const resultsPerPage = 21;
 
   const countries = [
     { code: "gb", name: "UK" },
@@ -54,7 +59,6 @@ const FeaturedJobs = () => {
     fetchCategories();
   }, [selectedCountry]);
 
-  
   const fetchJobs = async () => {
     setLoading(true);
     try {
@@ -63,12 +67,16 @@ const FeaturedJobs = () => {
       const categoryParam = selectedCategory ? `&category=${selectedCategory}` : "";
       
       const response = await fetch(
-        `https://api.adzuna.com/v1/api/jobs/${selectedCountry}/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=20${categoryParam}`
+        `https://api.adzuna.com/v1/api/jobs/${selectedCountry}/search/${currentPage}?app_id=${appId}&app_key=${appKey}&results_per_page=${resultsPerPage}${categoryParam}`
       );
       const data = await response.json();
       
       if (data.results) {
         setJobs(data.results);
+        if (data.count) {
+          setTotalPages(Math.ceil(data.count / resultsPerPage));
+        }
+        
         setError("");
       } else {
         setError("No jobs found.");
@@ -82,10 +90,62 @@ const FeaturedJobs = () => {
 
   useEffect(() => {
     fetchJobs();
-  }, [selectedCountry]);
+  }, [selectedCountry, selectedCategory, currentPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCountry, selectedCategory]);
 
   const handleJobDetails = (jobId: string) => {
     router.push(`/jobs/${selectedCountry}/${jobId}`);
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const goToPage = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+
+  const renderPaginationNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => goToPage(i)}
+          className={`px-3 py-1 mx-1 rounded ${
+            currentPage === i
+              ? "bg-[#0057ff] text-white"
+              : "bg-gray-200 hover:bg-gray-300"
+          }`}
+        >
+          {i}
+        </button>
+      );
+    }
+    
+    return pages;
   };
 
   return (
@@ -97,7 +157,7 @@ const FeaturedJobs = () => {
 
         <div className="mb-8 flex flex-wrap items-center justify-end gap-4">
           <div> 
-           <h1 className="text-2xl font-bold text-center text-[#0057ff] ">Filter By:</h1>
+           <h1 className="text-2xl font-bold text-center text-[#0057ff]">Filter By:</h1>
           </div>
           
           <div className="relative">
@@ -172,9 +232,9 @@ const FeaturedJobs = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {loading ? (
-            <p className="text-center">Loading jobs...</p>
+            <p className="text-center col-span-3">Loading jobs...</p>
           ) : error ? (
-            <p className="text-center text-red-500">{error}</p>
+            <p className="text-center text-red-500 col-span-3">{error}</p>
           ) : jobs.length > 0 ? (
             jobs.map(job => (
               <div
@@ -185,7 +245,7 @@ const FeaturedJobs = () => {
                   {job.title}
                 </h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  {countries.find(c => c.code === selectedCountry)?.name}
+                  {job.location.display_name}
                 </p>
                 <button
                   onClick={() => handleJobDetails(job.id)}
@@ -196,8 +256,40 @@ const FeaturedJobs = () => {
               </div>
             ))
           ) : (
-            <p className="text-center">No jobs available</p>
+            <p className="text-center col-span-3">No jobs available</p>
           )}
+        </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center mt-8">
+            <button 
+              onClick={goToPreviousPage} 
+              disabled={currentPage === 1}
+              className={`px-3 py-1 rounded-l flex items-center ${
+                currentPage === 1 
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              <FaArrowLeft className="mr-1" /> Prev
+            </button>
+            
+            {renderPaginationNumbers()}
+            
+            <button 
+              onClick={goToNextPage} 
+              disabled={currentPage === totalPages}
+              className={`px-3 py-1 rounded-r flex items-center ${
+                currentPage === totalPages 
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed" 
+                  : "bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              Next <FaArrowRight className="ml-1" />
+            </button>
+          </div>
+        )}
+        <div className="text-center mt-2 text-gray-500">
+          Page {currentPage} of {totalPages}
         </div>
       </div>
     </section>
