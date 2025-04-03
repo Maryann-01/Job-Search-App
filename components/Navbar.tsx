@@ -9,13 +9,13 @@ const Navbar = () => {
     const router = useRouter();
     const pathname = usePathname();
     const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-
-
+    
     const getLinkClass = (href: string) => {
         const baseClasses = "px-2 py-1 rounded transition duration-200 text-sm sm:text-base";
         const activeClasses = "text-[#0057ff] font-semibold relative after:absolute after:left-0 after:-bottom-2 after:w-full after:h-0.5 after:bg-[#0057ff]";
         const inactiveClasses = "text-gray-500 hover:text-[#0057ff]";
-        return `${baseClasses} ${pathname.startsWith(href) ? activeClasses : inactiveClasses}`;
+        const isActive = href === "/" ? pathname === href : pathname.startsWith(href);
+        return `${baseClasses} ${isActive ? activeClasses : inactiveClasses}`;
       };
     const handleLogout = () => {
         logout();
