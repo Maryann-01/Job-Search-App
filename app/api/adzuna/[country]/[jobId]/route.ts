@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(
-  request: Request,
-  context: { params: { country: string; jobId: string } }
+  request: NextRequest,
+  { params }: { params: { country: string; jobId: string } }
 ) {
-  const { country, jobId } = context.params;
+  const { country, jobId } = params;
   
   try {
     const appId = process.env.ADZUNA_APP_ID;
