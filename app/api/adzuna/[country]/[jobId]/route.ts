@@ -1,10 +1,17 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
+
+interface RouteContext {
+  params: {
+    country: string;
+    jobId: string;
+  }
+}
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Record<string, string> }
+  request: Request,
+  context: RouteContext
 ) {
-  const { country, jobId } = params;
+  const { country, jobId } = context.params;
   
   try {
     const appId = process.env.ADZUNA_APP_ID;
@@ -52,5 +59,6 @@ export async function GET(
       { error: 'Failed to fetch job details' },
       { status: 500 }
     );
+    
   }
 }
