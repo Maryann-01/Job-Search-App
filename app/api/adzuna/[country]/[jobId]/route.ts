@@ -7,6 +7,9 @@ export async function GET(
   const { country, jobId } = params;
   
   console.log(`API Route Handler: Fetching job ${jobId} from ${country}`);
+  const headers = new Headers({
+    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=3600'
+  });
   
   try {
     const appId = process.env.ADZUNA_APP_ID;
@@ -32,19 +35,20 @@ export async function GET(
     const searchData = await searchResponse.json();
     if (searchData.results && searchData.results.length > 0) {
       console.log("Found job via search endpoint");
-      return NextResponse.json(searchData.results[0]);
+      return NextResponse.json(searchData.results[0], {headers});
     }
     console.log("Both job fetch methods failed");
     return NextResponse.json(
       { error: 'Job not found' },
-      { status: 404 }
+      { status: 404 , headers}
     );
     
   } catch (error) {
     console.error('Error in API route:', error);
     return NextResponse.json(
       { error: 'Failed to fetch job details' },
-      { status: 500 }
+      { status: 500, headers: { 'Cache-Control': 'no-store' } }
     );
+    
   }
 }
