@@ -1,17 +1,11 @@
-import { NextResponse } from 'next/server';
-
-
-type Params = {
-  country: string;
-  jobId: string;
-}
+import {  NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: Request,
-  { params }: { params: Params }
+  { params }: { params: Promise<{ country: string; jobId: string }> }
 ) {
-  const { country, jobId } = params;
-
+  const { country, jobId } = await params;
+  
   
   try {
     const appId = process.env.ADZUNA_APP_ID;
