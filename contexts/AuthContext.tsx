@@ -59,11 +59,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  const login = async () => {
+ const login = async () => {
+  if (loading) return; 
+  setLoading(true); 
+  try {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
     localStorage.setItem('lastLoginTime', Date.now().toString());
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+  } finally {
+    setLoading(false); // Reset loading after login attempt
+  }
+};
 
   const logout = async () => {
     await signOut(auth);
