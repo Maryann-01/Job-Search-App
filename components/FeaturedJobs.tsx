@@ -31,7 +31,7 @@ const FeaturedJobs = () => {
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [categorySearch, setCategorySearch] = useState("");
   
-  // Pagination state
+ 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const resultsPerPage = 21;
@@ -97,9 +97,15 @@ const FeaturedJobs = () => {
     setCurrentPage(1);
   }, [selectedCountry, selectedCategory]);
 
-  const handleJobDetails = (jobId: string) => {
-    router.push(`/jobs/${selectedCountry}/${jobId}`);
-  };
+ const handleJobDetails = (jobId: string) => {
+  if (!user) {
+    router.push("/login");
+    return;
+  }
+
+  router.push(`/jobs/${selectedCountry}/${jobId}`);
+};
+
 
   const goToPreviousPage = () => {
     if (currentPage > 1) {
