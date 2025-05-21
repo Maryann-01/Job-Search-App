@@ -13,7 +13,7 @@ function LoginContent() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // If user is already logged in, redirect them
+    
     if (!loading && user) {
       if (redirect) {
         router.push(redirect);
@@ -33,14 +33,14 @@ function LoginContent() {
   const handleLogin = async () => {
     try {
       await login();
-      // After successful login, the useEffect above will handle the redirect
+
     } catch (error) {
       setError("Login failed. Please try again.");
       console.error("Login error:", error);
     }
   };
 
-  // If loading or user already logged in, show a loading state
+  
   if (loading || user) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
