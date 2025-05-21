@@ -1,8 +1,11 @@
 "use client";
-import { FaSearch, FaFilter, FaLock, FaBell } from 'react-icons/fa';
+import { FaSearch, FaFilter, FaLock, FaBell, FaUser } from 'react-icons/fa';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AboutPage = () => {
+    const { user, loading } = useAuth();
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="bg-gradient-to-r from-[#0057ff] to-blue-600 text-white py-20 px-4">
@@ -105,12 +108,26 @@ const AboutPage = () => {
                         >
                             Browse Jobs
                         </Link>
-                        <Link
-                            href="/login"
-                            className="border-2 border-[#0057ff] text-[#0057ff] px-8 py-4 rounded-lg hover:bg-blue-50 transition-colors text-lg font-semibold cursor-pointer"
-                        >
-                            Sign In
-                        </Link>
+                        
+                        {loading ? (
+                            <div className="border-2 border-[#0057ff] text-[#0057ff] px-8 py-4 rounded-lg text-lg font-semibold">
+                                Loading...
+                            </div>
+                        ) : user ? (
+                            <div className="border-2 border-[#0057ff] bg-blue-50 text-[#0057ff] px-8 py-4 rounded-lg flex items-center gap-2 text-lg font-semibold">
+                                <FaUser className="inline" />
+                                <Link href="/">
+                                    Back to Landing Page
+                                </Link>
+                            </div>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="border-2 border-[#0057ff] text-[#0057ff] px-8 py-4 rounded-lg hover:bg-blue-50 transition-colors text-lg font-semibold cursor-pointer"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
                 </section>
             </div>
